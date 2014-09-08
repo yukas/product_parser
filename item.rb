@@ -1,87 +1,45 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'nokogiri'
-require 'minitest/autorun'
+
+require './item_test'
 
 class Item
-  attr_accessor :doc
   attr_accessor :title, :price, :image_url, :delivery_at, :sku
+  attr_accessor :doc, :base
   
-  def initialize(doc)
+  def initialize(doc, base = nil)
     @doc = doc
+    @base = base || "/html/body/div[3]/div[4]/div/div"
   end
   
   def title
-    search_element('h1[itemprop="name"]').content
+    search_element("//li[@itemprop='offers']//*[@itemprop='name']").content.gsub("\n", " ").strip
   end
   
   def price
-    search_element('.ours > span:nth-child(1)').content
+    search_element("//span[@itemprop='price']").content
   end
   
   def image_url
-    search_element(
-      'div.internal-row:nth-child(2) > ' + 
-      'div:nth-child(1) > img:nth-child(1)')['src']
+    search_element("//div[@class='gridbox one-quarter']/img[1]/@src").value
   end
   
   def delivery_at
-    search_element('.stock').content.strip
+    search_element("//li[@itemprop='offers']//strong[contains(@class, 'stock')]/text()").content.strip
   end
   
   def sku
-    search_element('.item-code > strong:nth-child(2)').content
-  end
-  
-  def inspect
-    [title, price, image_url, delivery_at, sku].inspect
+    search_element("//li[@itemprop='offers']//*[@itemprop='sku']").content
   end
   
   private
   
     def search_element(selector)
-      found = doc.css(selector)
+      found = doc.xpath(base + selector)
       raise 'Found more than one element' if found.length > 1
       raise 'Found no such element' if found.empty?
       
       found.first
     end
-end
-
-describe Item do
-  before do
-    @doc = Nokogiri::HTML(File.read('./item.html'))
-  end
-  
-  it 'should have a title' do
-    item = Item.new(@doc)
-    
-    assert_equal 'Hills Prescription Diet AD Dog & Cat Food', item.title
-  end
-  
-  it 'should have a price' do
-    item = Item.new(@doc)
-    
-    assert_equal '£41.27', item.price
-  end
-  
-  it 'should have an image url' do
-    item = Item.new(@doc)
-    
-    assert_equal '//static1.viovet.co.uk/pi/created_1350058007.png',
-                  item.image_url
-  end
-  
-  it 'should have delivery time' do
-    item = Item.new(@doc)
-    
-    assert_equal 'Estimated dispatch within 24 working hours.',
-                  item.delivery_at
-  end
-  
-  it 'should have sku' do
-    item = Item.new(@doc)
-    
-    assert_equal '110368', item.sku
-  end
 end
