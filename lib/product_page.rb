@@ -9,17 +9,17 @@ module ProductParser
 
       @products = []
     end
-
-    def obtain_product_nodes
-      @nodes = document.search_elements("//ul[@id='product_listing']/li[@itemprop='offers']")
-    end
-
+    
     def build_products
       obtain_product_nodes
 
       nodes.each do |node|
         @products << Product.new(Document.from_xml_element(node))
       end
+    end
+    
+    def obtain_product_nodes
+      @nodes = document.search_elements("//ul[@id='product_listing']/li[@itemprop='offers']")
     end
 
     def to_csv(csv)
@@ -31,6 +31,7 @@ module ProductParser
     end
 
     private
+    
       def search_elements(selector)
         doc.xpath(selector)
       end

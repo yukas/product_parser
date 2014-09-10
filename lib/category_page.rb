@@ -10,7 +10,24 @@ module ProductParser
       @pages = []
       @products = []
     end
+    
+    def build_products
+      build_pages
 
+      pages.each do |page|
+        products.concat(page.products)
+      end
+    end
+    
+    def build_pages
+      obtain_links
+      absolutize_links
+      
+      links.each do |link|
+        pages << ProductPage.new(Document.from_url(link.to_s))
+      end
+    end
+    
     def obtain_links
       @links = document.search_elements(
         "//div[@class='floating-content-box']" +
@@ -21,23 +38,6 @@ module ProductParser
       @links = @links.map do |link|
         URI::join(host_url, link).to_s
       end if host_url
-    end
-
-    def build_pages
-      obtain_links
-      absolutize_links
-      
-      links.each do |link|
-        pages << ProductPage.new(Document.from_url(link.to_s))
-      end
-    end
-
-    def build_products
-      build_pages
-
-      pages.each do |page|
-        products.concat(page.products)
-      end
     end
 
     def to_csv(csv)
