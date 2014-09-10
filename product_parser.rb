@@ -1,0 +1,15 @@
+require 'rubygems'
+require 'bundler/setup'
+require 'nokogiri'
+require 'csv'
+require 'curb'
+
+$:.unshift(File.expand_path(File.dirname(__FILE__)))
+
+module ProductParser
+  autoload :CategoryPage, 'lib/category_page'
+  autoload :CLI,          'lib/cli'
+  autoload :Document,     'lib/document'
+  autoload :Product,      'lib/product'
+  autoload :ProductPage,  'lib/product_page'
+end
