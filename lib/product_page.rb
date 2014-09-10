@@ -29,11 +29,5 @@ module ProductParser
         product.to_csv(csv)
       end
     end
-
-    private
-    
-      def search_elements(selector)
-        doc.xpath(selector)
-      end
   end
 end
