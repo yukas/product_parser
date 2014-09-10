@@ -40,7 +40,6 @@ module ProductParser
     def modify(attribute, element)
       MODS[attribute].call(element.content)
     end
-    
 
     private
 
