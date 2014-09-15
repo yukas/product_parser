@@ -8,8 +8,8 @@ $:.unshift(File.expand_path(File.dirname(__FILE__)))
 
 module ProductParser
   autoload :CategoryPage, 'lib/category_page'
-  autoload :CLI,          'lib/cli'
-  autoload :Document,     'lib/document'
-  autoload :Product,      'lib/product'
   autoload :ProductPage,  'lib/product_page'
+  autoload :Product,      'lib/product'
+  autoload :Document,     'lib/document'
+  autoload :CLI,          'lib/cli'
 end
