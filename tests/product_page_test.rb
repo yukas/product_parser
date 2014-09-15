@@ -1,11 +1,10 @@
-require '../product_parser'
-require 'minitest/autorun'
+require 'tests/test_helper'
 
 module ProductParser
   describe ProductPage do
     before do
-      @multi_doc  = Document.from_content(File.read('./data/multi_product_page.html'))
-      @single_doc = Document.from_content(File.read('./data/single_product_page.html'))
+      @multi_doc  = Document.from_content(File.read('tests/data/multi_product_page.html'))
+      @single_doc = Document.from_content(File.read('tests/data/single_product_page.html'))
     end
   
     it 'should parse multiple products from multiple-product page' do

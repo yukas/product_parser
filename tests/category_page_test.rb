@@ -1,10 +1,9 @@
-require '../product_parser'
-require 'minitest/autorun'
+require 'tests/test_helper'
 
 module ProductParser
   describe CategoryPage do
     before do
-      @document = Document.from_content(File.read('./data/category_page.html'))
+      @document = Document.from_content(File.read('tests/data/category_page.html'))
     end
 
     it 'should parse all links out of category page' do

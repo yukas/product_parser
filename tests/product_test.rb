@@ -1,10 +1,9 @@
-require '../product_parser'
-require 'minitest/autorun'
+require 'tests/test_helper'
 
 module ProductParser
   describe Product do
     before do
-      @document = Document.from_content(File.read('./data/single_product_page.html'))
+      @document = Document.from_content(File.read('tests/data/single_product_page.html'))
       @document = Document.from_xml_element(@document.search_element("//*[@id='product_listing']"))
     end
   
