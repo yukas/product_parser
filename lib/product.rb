@@ -5,7 +5,8 @@ module ProductParser
     XPATHS = {
       title:       ".//*[@itemprop='name']",
       price:       ".//span[@itemprop='price']",
-      image_url:   "//div[@class='gridbox one-quarter']/img[1]/@src | //div[@class='gridbox one-quarter']/a/img[1]/@src",
+      image_url:   "//div[@class='gridbox one-quarter']/img[1]/@src | " + 
+                   "//div[@class='gridbox one-quarter']/a/img[1]/@src",
       delivery_at: ".//strong[contains(@class, 'stock')]/text()",
       sku:         ".//strong[@itemprop='sku']"
     }
@@ -24,27 +25,26 @@ module ProductParser
     
     def to_csv(csv)
       csv << [
-        get_attribute(:title), 
-        get_attribute(:price),
-        get_attribute(:image_url),
-        get_attribute(:delivery_at),
-        get_attribute(:sku)
+        attribute(:title), 
+        attribute(:price),
+        attribute(:image_url),
+        attribute(:delivery_at),
+        attribute(:sku)
       ]
     end
     
-    def get_attribute(attribute)
-      element = search_element(attribute)
-      modify(attribute, element)
+    def attribute(name)
+      modify_attribute_content(name, get_attribute_content(name))
     end
     
-    def modify(attribute, element)
-      MODS[attribute].call(element.content)
-    end
-
     private
-
-      def search_element(name)
-        document.search_element(XPATHS[name])
+    
+      def modify_attribute_content(name, content)
+        MODS[name].call(content)
+      end
+      
+      def get_attribute_content(name)
+        document.search_element(XPATHS[name]).content
       end
   end
 end
