@@ -7,18 +7,12 @@ module ProductParser
     end
 
     it 'should parse all links out of category page' do
-      page = CategoryPage.new(@document)
-      page.obtain_links
+      Document.stub :from_url, '' do
+        category_page = CategoryPage.new(@document)
+        category_page.build_product_pages
 
-      assert_equal 20, page.links.count
-    end
-
-    it 'should prefix links with site url' do
-      page = CategoryPage.new(@document, 'http://www.viovet.co.uk/')
-      page.obtain_links
-      page.absolutize_links
-
-      assert_equal true, page.links.first.include?('http://www.viovet.co.uk/')
+        assert_equal 20, category_page.product_pages.count
+      end
     end
   end
 end
